@@ -1,8 +1,8 @@
 # Prueba Técnica para Backend Developer - Traiders
 
-Author: Lucas Robaina
-Swagger: http://127.0.0.1:8000/docs
-ReDoc: http://127.0.0.1:8000/redoc
+**Author:** Lucas Robaina  
+**Swagger:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)  
+**ReDoc:** [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ## Parte 1: API con FastAPI (25 puntos)
 Desarrolla una API REST que incluya:
