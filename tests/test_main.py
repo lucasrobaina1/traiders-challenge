@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from main import app
 
-# Test Setup
+# ·Test Setup
 
 client = TestClient(app)
 
@@ -20,7 +20,7 @@ def test_app():
     with TestClient(app) as c:
         yield c
 
-# --- Unit Tests ---
+# Unit Tests
 
 def test_upload_data_success(test_app):
     with open(MOCK_DATA_PATH, "rb") as f:
@@ -53,7 +53,7 @@ def test_endpoints_after_upload(test_app):
     assert "rsi" in indicators_data
     assert isinstance(indicators_data["sma_5"], list)
 
-    # 3. Testear backtest
+    # Test backtest
     backtest_response = test_app.get("/strategy-backtest?initial_capital=50000")
     assert backtest_response.status_code == 200
     backtest_data = backtest_response.json()
