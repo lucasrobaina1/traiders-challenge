@@ -1,30 +1,5 @@
 # Prueba Técnica para Backend Developer - Traiders
 
-## Enunciado de la Prueba
-
-### Empresa: Traiders (Fintech - Trading & Análisis de Mercados)
-### Puesto: Backend Developer
-### Tiempo máximo: 60 minutos
-### Modalidad: Código ejecutable localmente (sin despliegue)
-
-## Contexto
-Traiders es una startup fintech especializada en trading automático y análisis de carteras. Necesitamos evaluar tus habilidades prácticas para desarrollar APIs que procesen datos financieros y simulen estrategias de trading.
-
-## Stack Técnico Requerido
-- FastAPI para APIs REST
-- pandas/numpy para procesamiento de datos financieros
-- Consultas de base de datos
-- Conocimientos básicos de indicadores técnicos y métricas financieras
-
-## Objetivos de la Evaluación
-Esta prueba evalúa tu capacidad real para:
-- Desarrollar APIs REST con FastAPI - Estructura profesional y manejo de datos
-- Procesar datos financieros - Análisis de series temporales OHLC y validación
-- Calcular indicadores técnicos - RSI, MACD, medias móviles
-- Implementar estrategias de trading - Simulación de operaciones y backtesting
-- Aplicar métricas financieras - Sharpe ratio, drawdown, rendimientos
-- Estructurar código profesional - Organización de proyecto Python
-
 ## Parte 1: API con FastAPI (25 puntos)
 Desarrolla una API REST que incluya:
 
