@@ -1,30 +1,5 @@
 # Prueba Técnica para Backend Developer - Traiders
 
-## Enunciado de la Prueba
-
-### Empresa: Traiders (Fintech - Trading & Análisis de Mercados)
-### Puesto: Backend Developer
-### Tiempo máximo: 60 minutos
-### Modalidad: Código ejecutable localmente (sin despliegue)
-
-## Contexto
-Traiders es una startup fintech especializada en trading automático y análisis de carteras. Necesitamos evaluar tus habilidades prácticas para desarrollar APIs que procesen datos financieros y simulen estrategias de trading.
-
-## Stack Técnico Requerido
-- FastAPI para APIs REST
-- pandas/numpy para procesamiento de datos financieros
-- Consultas de base de datos
-- Conocimientos básicos de indicadores técnicos y métricas financieras
-
-## Objetivos de la Evaluación
-Esta prueba evalúa tu capacidad real para:
-- Desarrollar APIs REST con FastAPI - Estructura profesional y manejo de datos
-- Procesar datos financieros - Análisis de series temporales OHLC y validación
-- Calcular indicadores técnicos - RSI, MACD, medias móviles
-- Implementar estrategias de trading - Simulación de operaciones y backtesting
-- Aplicar métricas financieras - Sharpe ratio, drawdown, rendimientos
-- Estructurar código profesional - Organización de proyecto Python
-
 ## Parte 1: API con FastAPI (25 puntos)
 Desarrolla una API REST que incluya:
 
@@ -95,3 +70,37 @@ class TradingStrategy:
 
 ## Entregables
 - Código fuente completo con la estructura sugerida
+
+---
+
+## Cómo Ejecutar y Probar
+
+Sigue estos pasos para poner en marcha la aplicación y explorar la API.
+
+### 1. Instalación de Dependencias
+
+Asegúrate de tener Python 3 instalado. Luego, instala las librerías necesarias desde el archivo `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Ejecutar el Servidor
+
+Una vez instaladas las dependencias, puedes iniciar la aplicación con el siguiente comando:
+
+```bash
+python3 run.py
+```
+
+El servidor se ejecutará en `http://127.0.0.1:8000` y se recargará automáticamente si detecta cambios en el código.
+
+### 3. Explorar la Documentación de la API
+
+Una de las grandes ventajas de FastAPI es la documentación automática e interactiva. Puedes acceder a ella a través de dos interfaces:
+
+- **Swagger UI (Recomendado)**: Una interfaz completa donde puedes ver todos los endpoints, sus descripciones, los modelos de datos y probarlos en tiempo real.
+  - **URL**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+- **ReDoc**: Una vista de documentación alternativa, más limpia y enfocada en la lectura.
+  - **URL**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
