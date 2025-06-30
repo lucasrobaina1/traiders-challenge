@@ -8,9 +8,32 @@ from .trading import TradingStrategy
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+TAGS = {
+    "data": "Data Management",
+    "analysis": "Analysis and Strategies"
+}
+
 # EP 1 - Upload data
-@router.post("/upload-data")
+@router.post(
+    "/upload-data", 
+    tags=[TAGS["data"]], 
+    responses={
+        400: {
+            "description": "The CSV file lacks required columns or contains null data.",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Missing required columns (timestamp, open, high, low, close, volume)"}
+                }
+            }
+        }
+    }
+)
 async def upload_data(request: Request, file: UploadFile = File(...)):
+    """Upload OHLCV data from a CSV file
+
+    Uploads a CSV file with market data. The file must contain the columns: 
+    'timestamp', 'open', 'high', 'low', 'close', 'volume'.
+    """
     df = pd.read_csv(file.file)
     if not functions.validate_ohlc_data(df):
         logger.error("Data validation failed for uploaded file.")
@@ -23,8 +46,25 @@ async def upload_data(request: Request, file: UploadFile = File(...)):
     return {"message": "Data uploaded successfully"}
 
 # EP 2 - Indicators
-@router.get("/indicators")
+@router.get(
+    "/indicators", 
+    tags=[TAGS["analysis"]], 
+    responses={
+        400: {
+            "description": "No data has been uploaded yet.",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "No data uploaded yet"}
+                }
+            }
+        }
+    }
+)
 async def get_indicators(request: Request):
+    """Calculate technical indicators
+
+    Calculates SMA (5, 20), RSI (14), and MACD on the uploaded data and returns them in JSON format.
+    """
     if request.app.state.data_df is None:
         raise HTTPException(status_code=400, detail="No data uploaded yet")
     
@@ -50,9 +90,28 @@ async def get_indicators(request: Request):
     }
 
 # EP 3 - Backtesting 
-# El capital inicial se envía como parámetro opcional al hacer la solicitud, por defecto es 100000
-@router.get("/strategy-backtest")
-async def strategy_backtest(request: Request, initial_capital: float = Query(100000.0, gt=0)):
+@router.get(
+    "/strategy-backtest", 
+    tags=[TAGS["analysis"]], 
+    responses={
+        400: {
+            "description": "No data has been uploaded for backtesting.",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "No data uploaded for backtesting."}
+                }
+            }
+        }
+    }
+)
+async def strategy_backtest(
+    request: Request, 
+    initial_capital: float = Query(100000.0, gt=0, description="Initial capital for the simulation.")):
+    """Run a trading strategy backtest
+
+    Simulates a moving average crossover strategy (SMA 5 vs SMA 20) and returns performance metrics.
+    The initial capital is sent as an optional parameter with the request, default is 100000.
+    """
     if not hasattr(request.app.state, 'data_df') or request.app.state.data_df is None:
         logger.warning("Backtest attempt without data.")
         raise HTTPException(status_code=400, detail="No data uploaded for backtesting.")
@@ -62,13 +121,3 @@ async def strategy_backtest(request: Request, initial_capital: float = Query(100
     results = backtester.execute_strategy(request.app.state.data_df)
     logger.info("Backtest finished.", extra={"results": results})
     return results
-
-# EP para verificar los datos cargados y debuggear
-@router.get("/view-data")
-async def view_data(request: Request):
-    if request.app.state.data_df is None:
-        return {"message": "No data uploaded yet"}
-    return {
-        "columns": list(request.app.state.data_df.columns),
-        "rows": request.app.state.data_df.head(5).to_dict()
-    }

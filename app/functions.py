@@ -6,7 +6,6 @@ def validate_ohlc_data(df: pd.DataFrame) -> bool:
     required_columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume']
     if not all(col in df.columns for col in required_columns):
         return False
-    # Validar que no haya nulos en columnas criticas
     if df[required_columns].isnull().values.any():
         return False
     return True
