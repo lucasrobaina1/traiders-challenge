@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from app.endpoints import router
+from app.logger import setup_logging
+
+# Configurar logging antes de crear la app
+setup_logging()
 
 app = FastAPI()
 

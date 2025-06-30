@@ -1,8 +1,11 @@
+import logging
 from fastapi import APIRouter, UploadFile, File, HTTPException, Query, Request
 import pandas as pd
 
 from . import functions
+from .trading import TradingStrategy
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # EP 1 - Upload data
@@ -10,11 +13,13 @@ router = APIRouter()
 async def upload_data(request: Request, file: UploadFile = File(...)):
     df = pd.read_csv(file.file)
     if not functions.validate_ohlc_data(df):
+        logger.error("Data validation failed for uploaded file.")
         raise HTTPException(
             status_code=400,
             detail="Missing required columns (timestamp, open, high, low, close, volume)"
         )
     request.app.state.data_df = df
+    logger.info(f"Data uploaded successfully.")
     return {"message": "Data uploaded successfully"}
 
 # EP 2 - Indicators
@@ -48,58 +53,15 @@ async def get_indicators(request: Request):
 # El capital inicial se envía como parámetro opcional al hacer la solicitud, por defecto es 100000
 @router.get("/strategy-backtest")
 async def strategy_backtest(request: Request, initial_capital: float = Query(100000.0, gt=0)):
-    print("initial_capital: {}".format(initial_capital))
     if not hasattr(request.app.state, 'data_df') or request.app.state.data_df is None:
+        logger.warning("Backtest attempt without data.")
         raise HTTPException(status_code=400, detail="No data uploaded for backtesting.")
 
-    df = request.app.state.data_df.copy()
-    
-    # Calculo SMA 5 y 20
-    df['sma_5'] = functions.calculate_sma(df['close'], 5)
-    df['sma_20'] = functions.calculate_sma(df['close'], 20)
-    df.dropna(inplace=True)
-    df.reset_index(drop=True, inplace=True)
-
-    # Para esta simulación empezamos desde cero con el capital inicial para comprar acciones:
-    cash = initial_capital
-    shares = 0.0
-    trade_count = 0
-    peak_value = initial_capital
-    max_drawdown = 0.0
-    portfolio_history = [initial_capital]
-
-    for i in range(1, len(df)):
-        # Compra:SMA5 cruza por encima de SMA20 y no tenemos acciones
-        if df['sma_5'].iloc[i] > df['sma_20'].iloc[i] and df['sma_5'].iloc[i-1] <= df['sma_20'].iloc[i-1] and shares == 0:
-            shares = cash / df['close'].iloc[i]
-            cash = 0.0
-            trade_count += 1
-        # Venta: SMA5 cruza por debajo de SMA20 y tenemos acciones
-        elif df['sma_5'].iloc[i] < df['sma_20'].iloc[i] and df['sma_5'].iloc[i-1] >= df['sma_20'].iloc[i-1] and shares > 0:
-            cash = shares * df['close'].iloc[i]
-            shares = 0.0
-            trade_count += 1
-
-        portfolio_value = cash + shares * df['close'].iloc[i]
-        portfolio_history.append(portfolio_value)
-        peak_value = max(peak_value, portfolio_value)
-        drawdown = (peak_value - portfolio_value) / peak_value
-        max_drawdown = max(max_drawdown, drawdown)
-
-    final_portfolio_value = portfolio_history[-1]
-    total_return = ((final_portfolio_value - initial_capital) / initial_capital) * 100
-
-    returns = df['close'].pct_change().dropna()
-    sharpe_ratio = 0
-    if returns.std() > 0:
-        sharpe_ratio = (returns.mean() / returns.std()) * (252 ** 0.5)
-
-    return {
-        "total_return": round(total_return, 2),
-        "num_operations": trade_count,
-        "max_drawdown": round(max_drawdown * 100, 2),
-        "sharpe_ratio": round(sharpe_ratio, 2)
-    }
+    logger.info(f"Starting backtest with initial capital: {initial_capital}")
+    backtester = TradingStrategy(initial_capital)
+    results = backtester.execute_strategy(request.app.state.data_df)
+    logger.info("Backtest finished.", extra={"results": results})
+    return results
 
 # EP para verificar los datos cargados y debuggear
 @router.get("/view-data")
