@@ -16,7 +16,6 @@ def sample_dataframe():
     return pd.DataFrame(data)
 
 def test_get_technical_indicators_success(sample_dataframe):
-    """Verifica el cálculo exitoso de indicadores cuando hay datos."""
     request = Mock()
     request.app.state.data_df = sample_dataframe
 
@@ -29,7 +28,6 @@ def test_get_technical_indicators_success(sample_dataframe):
     assert len(result["sma_5"]) > 0
 
 def test_get_technical_indicators_no_data():
-    """Verifica que se lanza una HTTPException cuando no hay datos."""
     request = Mock()
     request.app.state.data_df = None
 
