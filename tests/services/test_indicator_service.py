@@ -15,7 +15,6 @@ from app.services.indicator_service import (
 
 @pytest.fixture
 def sample_dataframe():
-    """Crea un DataFrame de ejemplo para los tests."""
     data = {
         'timestamp': pd.to_datetime(pd.date_range(start='2023-01-01', periods=30)),
         'open': np.random.uniform(98, 102, 30),
@@ -27,28 +26,24 @@ def sample_dataframe():
     return pd.DataFrame(data)
 
 def test_calculate_sma(sample_dataframe):
-    """Verifica que el cálculo de la SMA es correcto."""
     sma_5 = calculate_sma(sample_dataframe['close'], 5)
     assert isinstance(sma_5, pd.Series)
-    assert sma_5.isnull().sum() == 4  # Los primeros 4 valores deben ser NaN
-    assert round(sma_5.iloc[4], 2) == 102.0  # (100+101+102+103+104)/5
+    assert sma_5.isnull().sum() == 4  
+    assert round(sma_5.iloc[4], 2) == 102.0  
 
 def test_calculate_rsi(sample_dataframe):
-    """Verifica que el cálculo del RSI es correcto."""
     rsi = calculate_rsi(sample_dataframe['close'], window=14)
     assert isinstance(rsi, pd.Series)
     assert rsi.isnull().sum() > 0
-    assert rsi.iloc[-1] == 100.0  # Con una subida constante, el RSI tiende a 100
+    assert rsi.iloc[-1] == 100.0  
 
 def test_calculate_macd(sample_dataframe):
-    """Verifica que el cálculo del MACD es correcto."""
     macd = calculate_macd(sample_dataframe['close'])
     assert isinstance(macd, dict)
     assert 'line' in macd and 'signal' in macd and 'histogram' in macd
     assert isinstance(macd['line'], pd.Series)
 
 def test_calculate_indicators(sample_dataframe):
-    """Verifica que la función principal de indicadores funciona."""
     indicators = calculate_indicators(sample_dataframe)
     assert isinstance(indicators, dict)
     assert 'sma_5' in indicators
