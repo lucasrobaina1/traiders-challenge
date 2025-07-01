@@ -11,12 +11,10 @@ from app.controllers.backtest_controller import run_strategy_backtest
 
 @pytest.fixture
 def sample_dataframe():
-    """Crea un DataFrame de ejemplo para los tests."""
     data = {'close': [100, 101, 102, 103, 104, 105, 104, 103, 102, 101, 100]}
     return pd.DataFrame(data)
 
 def test_run_strategy_backtest_success(sample_dataframe):
-    """Verifica la ejecución exitosa de un backtest cuando hay datos."""
     request = Mock()
     request.app.state.data_df = sample_dataframe
     initial_capital = 10000.0
@@ -30,7 +28,6 @@ def test_run_strategy_backtest_success(sample_dataframe):
     assert "sharpe_ratio" in result
 
 def test_run_strategy_backtest_no_data():
-    """Verifica que se lanza una HTTPException cuando no hay datos."""
     request = Mock()
     request.app.state.data_df = None
     initial_capital = 10000.0
