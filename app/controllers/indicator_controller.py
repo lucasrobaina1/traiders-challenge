@@ -1,12 +1,8 @@
-"""Controller to handle the business logic for technical indicators."""
-
 import pandas as pd
 from fastapi import Request, HTTPException
 from app.services.indicator_service import calculate_sma, calculate_rsi, calculate_macd
 
-def get_technical_indicators(request: Request) -> dict:
-    """Orchestrates the calculation of all technical indicators."""
-    
+def get_technical_indicators(request: Request) -> dict:    
     if not hasattr(request.app.state, 'data_df') or request.app.state.data_df is None:
         raise HTTPException(status_code=400, detail="No data uploaded yet")
 
