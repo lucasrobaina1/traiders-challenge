@@ -22,6 +22,15 @@ def calculate_rsi(prices: pd.Series, window: int = 14) -> pd.Series:
     rs = gain / loss
     return 100 - (100 / (1 + rs))
 
+def calculate_indicators(df: pd.DataFrame) -> dict:
+    """Calcula todos los indicadores técnicos y los devuelve en un diccionario."""
+    return {
+        "sma_5": calculate_sma(df['close'], 5),
+        "sma_20": calculate_sma(df['close'], 20),
+        "rsi": calculate_rsi(df['close']),
+        "macd": calculate_macd(df['close']),
+    }
+
 def calculate_macd(prices: pd.Series) -> dict:
     """Calcula MACD line, signal line e histogram"""
     macd_line = prices.ewm(span=12).mean() - prices.ewm(span=26).mean()

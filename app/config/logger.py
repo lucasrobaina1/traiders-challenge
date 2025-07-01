@@ -6,7 +6,6 @@ def setup_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
-    # Evitar duplicar handlers si ya están configurados
     if logger.hasHandlers():
         logger.handlers.clear()
 
