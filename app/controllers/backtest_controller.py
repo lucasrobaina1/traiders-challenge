@@ -1,5 +1,3 @@
-"""Controller to handle the business logic for backtesting."""
-
 import pandas as pd
 from fastapi import Request, HTTPException
 from app.services.backtest_service import TradingStrategy
