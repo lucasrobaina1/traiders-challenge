@@ -1,4 +1,3 @@
-# app/logger.py
 import logging
 import sys
 from pythonjsonlogger import jsonlogger
