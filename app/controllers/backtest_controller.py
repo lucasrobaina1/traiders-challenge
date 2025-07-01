@@ -7,7 +7,7 @@ def run_strategy_backtest(request: Request, initial_capital: float) -> dict:
         raise HTTPException(status_code=400, detail="No data uploaded for backtesting.")
 
     df = request.app.state.data_df
-    backtester = TradingStrategy(df, initial_capital)
-    results = backtester.backtest()
+    strategy = TradingStrategy(initial_capital=initial_capital)
+    results = strategy.execute_strategy(df)
     
     return results

@@ -59,7 +59,7 @@ async def get_indicators(request: Request):
 )
 async def strategy_backtest(
     request: Request, 
-    initial_capital: float = Query(100000.0, gt=0, description="Initial capital for the simulation.")):
+    initial_capital: float = Query(100000.0, gt=0, description="Specifies the initial capital.")):
     """Run a trading strategy backtest
 
     Simulates a moving average crossover strategy (SMA 5 vs SMA 20) and returns performance metrics.

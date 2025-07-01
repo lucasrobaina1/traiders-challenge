@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from app.routers.trading_router import router as trading_router
 from app.config.logger import setup_logging
 
-# Configurar logging antes de crear la app
 setup_logging()
 
 app = FastAPI()

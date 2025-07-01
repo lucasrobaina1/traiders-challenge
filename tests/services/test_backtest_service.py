@@ -19,7 +19,7 @@ def sample_strategy_data():
     return df
 
 def test_trading_strategy_initialization(sample_strategy_data):
-    strategy = TradingStrategy(sample_strategy_data, initial_capital=10000)
+    strategy = TradingStrategy(initial_capital=10000)
     assert strategy.initial_capital == 10000
     assert strategy.cash == 10000
     assert strategy.shares == 0.0
@@ -28,8 +28,8 @@ def test_trading_strategy_initialization(sample_strategy_data):
     assert len(strategy.portfolio_values) == 0
 
 def test_trading_strategy_backtest(sample_strategy_data):
-    strategy = TradingStrategy(sample_strategy_data, initial_capital=10000)
-    results = strategy.backtest()
+    strategy = TradingStrategy(initial_capital=10000)
+    results = strategy.execute_strategy(sample_strategy_data)
 
     assert isinstance(results, dict)
     assert 'total_return' in results
