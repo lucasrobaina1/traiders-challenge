@@ -11,7 +11,6 @@ from app.controllers.indicator_controller import get_technical_indicators
 
 @pytest.fixture
 def sample_dataframe():
-    """Crea un DataFrame de ejemplo para los tests."""
     data = {'close': [100, 101, 102, 103, 104, 105]}
     return pd.DataFrame(data)
 
